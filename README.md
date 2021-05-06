@@ -71,3 +71,10 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## Package json
+
+npm i @nestjs/graphql graphql-tools graphql apollo-server-express
+npm i class-validator
+npm i class-transformer
+npm i --s @nestjs/typeorm typeorm sqlite3
