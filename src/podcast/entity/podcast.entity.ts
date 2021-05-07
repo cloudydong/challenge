@@ -1,8 +1,8 @@
-import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsNumber, IsString } from "class-validator";
-import { CoreEntity } from "src/common/entity/core.entity";
-import { Entity } from "typeorm";
-import { Episode } from "./episode.entity";
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { IsNumber, IsString } from 'class-validator';
+import { CoreEntity } from 'src/common/entity/core.entity';
+import { Entity, OneToMany } from 'typeorm';
+import { Episode } from './episode.entity';
 
 @InputType('PodcastInput', { isAbstract: true })
 @ObjectType()
@@ -21,5 +21,8 @@ export class Podcast extends CoreEntity {
   rating: number;
 
   @Field(() => [Episode])
+  @OneToMany(() => Episode, (episode) => episode.podcast, {
+    onDelete: 'CASCADE',
+  })
   episodes: Episode[];
 }
