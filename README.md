@@ -74,7 +74,13 @@ Nest is [MIT licensed](LICENSE).
 
 ## Package json
 
+```bash
 npm i @nestjs/graphql graphql-tools graphql apollo-server-express
 npm i class-validator
 npm i class-transformer
 npm i --s @nestjs/typeorm typeorm sqlite3
+npm i bcrypt
+npm i @types/bcrypt --dev-only
+npm i jsonwebtoken
+npm i @types/jsonwebtoken --only-dev
+```

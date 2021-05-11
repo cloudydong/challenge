@@ -1,7 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entity/core.entity';
-import { Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { Episode } from './episode.entity';
 
 @InputType('PodcastInput', { isAbstract: true })
@@ -9,20 +9,23 @@ import { Episode } from './episode.entity';
 @Entity()
 export class Podcast extends CoreEntity {
   @Field(() => String)
+  @Column()
   @IsString()
   title: string;
 
   @Field(() => String)
+  @Column()
   @IsString()
   category: string;
 
   @Field(() => Number)
+  @Column()
   @IsNumber()
   rating: number;
 
   @Field(() => [Episode])
   @OneToMany(() => Episode, (episode) => episode.podcast, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   episodes: Episode[];
 }
