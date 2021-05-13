@@ -83,4 +83,5 @@ npm i bcrypt
 npm i @types/bcrypt --dev-only
 npm i jsonwebtoken
 npm i @types/jsonwebtoken --only-dev
+npm i --s @nestjs/config
 ```
