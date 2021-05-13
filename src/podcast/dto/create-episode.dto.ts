@@ -7,6 +7,7 @@ export class CreateEpisodeInput extends OmitType(Episode, [
   'id',
   'createAt',
   'updateAt',
+  'podcast',
 ] as const) {
   @Field(() => Number)
   podcastId: number;

@@ -81,6 +81,9 @@ export class PodcastService {
     updatePodcastInput: UpdatePodcastInput,
   ): Promise<UpdatePodcastOutput> {
     try {
+      await this.podcastRepository.findOneOrFail({
+        id: updatePodcastInput.id,
+      });
       await this.podcastRepository.save({
         ...updatePodcastInput,
       });
