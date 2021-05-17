@@ -35,12 +35,12 @@ export class PodcastResolver {
   constructor(private readonly podcastService: PodcastService) {}
 
   @Query(() => FindPodcastsOutput)
-  async findPodcasts(): Promise<FindPodcastsOutput> {
+  async getAllPodcasts(): Promise<FindPodcastsOutput> {
     return this.podcastService.findPodcasts();
   }
 
   @Query(() => FindPodcastOutput)
-  async findPodcast(
+  async getPodcast(
     @Args('input') findPodcastInput: FindPodcastInput,
   ): Promise<FindPodcastOutput> {
     return this.podcastService.findPodcast(findPodcastInput);
@@ -68,14 +68,14 @@ export class PodcastResolver {
   }
 
   @Query(() => FindEpisodesOutput)
-  async findEpisodes(
+  async getAllEpisodes(
     @Args('input') findEpisodesInput: FindEpisodesInput,
   ): Promise<FindEpisodesOutput> {
     return this.podcastService.findEpisodes(findEpisodesInput);
   }
 
   @Query(() => FindEpisodeOutput)
-  async findEpisode(
+  async getEpisode(
     @Args('input') findEpisodeInput: FindEpisodeInput,
   ): Promise<FindEpisodeOutput> {
     return this.podcastService.findPodcast(findEpisodeInput);
