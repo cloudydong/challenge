@@ -22,7 +22,7 @@ export class UserResolver {
     return user;
   }
 
-  @Query(() => User)
+  @Query(() => UserProfileOutput)
   @UseGuards(AuthGuard)
   seeProfile(
     @Args() userProfileInput: UserProfileInput,
