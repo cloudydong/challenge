@@ -8,6 +8,7 @@ import {
 } from './dto/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dto/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
+import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { User } from './entity/user.entity';
 import { UserService } from './user.service';
 
@@ -17,8 +18,16 @@ export class UserResolver {
 
   @Query(() => User)
   @UseGuards(AuthGuard)
-  seeProfile(@AuthUser() user: User) {
+  me(@AuthUser() user: User): User {
     return user;
+  }
+
+  @Query(() => User)
+  @UseGuards(AuthGuard)
+  seeProfile(
+    @Args() userProfileInput: UserProfileInput,
+  ): Promise<UserProfileOutput> {
+    return this.userService.findById(userProfileInput);
   }
 
   @Mutation(() => CreateAccountOutput)
