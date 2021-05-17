@@ -7,6 +7,9 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from './jwt/jwt.module';
 import { ConfigModule } from '@nestjs/config';
+import { User } from './user/entity/user.entity';
+import { Episode } from './podcast/entity/episode.entity';
+import { Podcast } from './podcast/entity/podcast.entity';
 
 @Module({
   imports: [
@@ -18,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
       database: 'database.db',
       synchronize: true,
       logging: false,
-      entities: ['dist/**/*.entity.{ts,js}'],
+      entities: [Podcast, Episode, User],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
