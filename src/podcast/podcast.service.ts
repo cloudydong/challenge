@@ -171,6 +171,9 @@ export class PodcastService {
     id: episodeId,
   }: DeleteEpisodeInput): Promise<DeleteEpisodeOutput> {
     try {
+      const episode = await this.episodeRepository.findOne(episodeId);
+      if (!episode)
+        return { ok: false, error: 'can not find episode by episodeId' };
       await this.episodeRepository.delete(episodeId);
       return { ok: true };
     } catch (error) {

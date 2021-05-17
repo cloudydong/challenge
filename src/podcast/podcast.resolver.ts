@@ -64,7 +64,7 @@ export class PodcastResolver {
   async deletePodcast(
     @Args('input') deletePodcastInput: DeletePodcastInput,
   ): Promise<DeletePodcastOutput> {
-    return this.podcastService.updatePodcast(deletePodcastInput);
+    return this.podcastService.deletePodcast(deletePodcastInput);
   }
 
   @Query(() => FindEpisodesOutput)
@@ -78,7 +78,7 @@ export class PodcastResolver {
   async getEpisode(
     @Args('input') findEpisodeInput: FindEpisodeInput,
   ): Promise<FindEpisodeOutput> {
-    return this.podcastService.findPodcast(findEpisodeInput);
+    return this.podcastService.findEpisode(findEpisodeInput);
   }
 
   @Mutation(() => CreateEpisodeOutput)
