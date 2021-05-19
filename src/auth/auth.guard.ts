@@ -13,29 +13,28 @@ export class AuthGuard implements CanActivate {
     private readonly userService: UserService,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const roles = this.reflector.get<AllowedRoles>(
-      'roles',
-      context.getHandler(),
-    );
-    if (!roles) return true;
+    try {
+      const roles = this.reflector.get<AllowedRoles>(
+        'roles',
+        context.getHandler(),
+      );
+      if (!roles) return true;
 
-    const gqlContext = GqlExecutionContext.create(context).getContext();
-    const token = gqlContext.token;
-    if (token) {
+      const gqlContext = GqlExecutionContext.create(context).getContext();
+      const token = gqlContext.token;
+      if (!token) return false;
+
       const decoded = this.jwtService.verify(token.toString());
-      if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {
-        const { user } = await this.userService.findById({
-          userId: decoded['id'],
-        });
-        if (!user) {
-          return false;
-        }
-        gqlContext['user'] = user;
-        return roles.includes('Any') || roles.includes(user.role);
-      } else {
+      if (!(typeof decoded === 'object' && decoded.hasOwnProperty('id')))
         return false;
-      }
-    } else {
+      const userId = decoded['id'];
+
+      const { user } = await this.userService.findById({ userId });
+      if (!user) return false;
+      gqlContext['user'] = user;
+
+      return roles.includes('Any') || roles.includes(user.role);
+    } catch (error) {
       return false;
     }
   }
