@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { SearchPodcastsOutput } from 'src/listener/dto/search-podcasts.dto';
+import { ILike, Repository } from 'typeorm';
 import {
   CreateEpisodeInput,
   CreateEpisodeOutput,
@@ -178,6 +179,17 @@ export class PodcastService {
       return { ok: true };
     } catch (error) {
       return { ok: false, error: 'can not delete episode by episodeId' };
+    }
+  }
+
+  async searchByTitle(query: string): Promise<SearchPodcastsOutput> {
+    try {
+      const podcasts = await this.podcastRepository.find({
+        where: { title: ILike(`%${query}%`) },
+      });
+      return { ok: true, podcasts };
+    } catch (error) {
+      return { ok: false, error: 'can not search podcasts' };
     }
   }
 }

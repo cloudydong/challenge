@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from 'src/jwt/jwt.service';
+import { MarkEpisodeOutput } from 'src/listener/dto/mark-episode.dto';
+import { ReivewPodcastsOutput } from 'src/listener/dto/review-podcast.dto';
+import { SeeSubscriptionsOutput } from 'src/listener/dto/see-subscriptions.dto';
+import { SubscribePodcastOutput } from 'src/listener/dto/subscribe-podcast.dto';
+import { Review } from 'src/listener/entity/review.entity';
+import { Episode } from 'src/podcast/entity/episode.entity';
+import { Podcast } from 'src/podcast/entity/podcast.entity';
 import { Repository } from 'typeorm';
 import {
   CreateAccountInput,
@@ -16,6 +23,12 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Podcast)
+    private readonly podcastRepository: Repository<Podcast>,
+    @InjectRepository(Episode)
+    private readonly episodeRepository: Repository<Episode>,
+    @InjectRepository(Review)
+    private readonly reviewRepository: Repository<Review>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -86,6 +99,78 @@ export class UserService {
       return { ok: true };
     } catch (error) {
       return { ok: false, error: 'fail edit user profile' };
+    }
+  }
+
+  async createReviewPodcast(
+    userId: number,
+    podcastId: number,
+    comment: string,
+  ): Promise<ReivewPodcastsOutput> {
+    try {
+      const user = await this.userRepository.findOneOrFail(userId, {
+        relations: ['reviews'],
+      });
+      const podcast = await this.podcastRepository.findOneOrFail(podcastId);
+      const review = this.reviewRepository.create({
+        comment,
+        author: user,
+        podcast,
+      });
+
+      user.reviews.push(review);
+      await this.userRepository.save(user);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: 'can not create review to podcast' };
+    }
+  }
+
+  async subscribeToPodcast(
+    userId: number,
+    podcastId: number,
+  ): Promise<SubscribePodcastOutput> {
+    try {
+      const user = await this.userRepository.findOneOrFail(userId, {
+        relations: ['subscriptions'],
+      });
+      const podcast = await this.podcastRepository.findOneOrFail(podcastId);
+      user.subscriptions.push(podcast);
+      await this.userRepository.save(user);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: 'can not subscribe to podcast' };
+    }
+  }
+
+  async seeSubscriptions(userId: number): Promise<SeeSubscriptionsOutput> {
+    try {
+      const user = await this.userRepository.findOneOrFail(userId, {
+        relations: ['subscriptions'],
+      });
+      const subscriptions = user.subscriptions;
+      return { ok: true, subscriptions };
+    } catch (error) {
+      return { ok: false, error: 'can not see subscriptions' };
+    }
+  }
+
+  async markEpisodeAsPlayed(
+    userId: number,
+    episodeId: number,
+  ): Promise<MarkEpisodeOutput> {
+    try {
+      const user = await this.userRepository.findOneOrFail(userId, {
+        relations: ['markEpisode'],
+      });
+      const episode = await this.episodeRepository.findOneOrFail(episodeId);
+      const episodes = user.markEpisode;
+      episodes.push(episode);
+
+      await this.userRepository.save(user);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: 'can not mark episode' };
     }
   }
 }

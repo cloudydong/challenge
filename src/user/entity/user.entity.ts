@@ -6,9 +6,20 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
-import { IsIn, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entity/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { Review } from 'src/listener/entity/review.entity';
+import { Episode } from 'src/podcast/entity/episode.entity';
+import { Podcast } from 'src/podcast/entity/podcast.entity';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 
 export enum UserRole {
   Host = 'Host',
@@ -31,10 +42,23 @@ export class User extends CoreEntity {
   @IsString()
   password: string;
 
-  @Column()
-  @Field(() => String)
-  @IsIn(['Host', 'Listener'])
-  role: string;
+  @Field(() => UserRole)
+  @Column({ type: 'simple-enum', enum: UserRole })
+  role: UserRole;
+
+  @Field(() => [Review])
+  @OneToMany(() => Review, (review) => review.author)
+  reviews: Review[];
+
+  @Field(() => [Podcast])
+  @ManyToMany(() => Podcast, (podcast) => podcast.subscribers)
+  @JoinTable()
+  subscriptions: Podcast[];
+
+  @Field(() => [Episode])
+  @ManyToMany(() => Episode)
+  @JoinTable()
+  markEpisode: Episode[];
 
   @BeforeInsert()
   @BeforeUpdate()

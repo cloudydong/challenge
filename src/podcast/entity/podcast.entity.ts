@@ -1,7 +1,9 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, Max, Min } from 'class-validator';
 import { CoreEntity } from 'src/common/entity/core.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Review } from 'src/listener/entity/review.entity';
+import { User } from 'src/user/entity/user.entity';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { Episode } from './episode.entity';
 
 @InputType('PodcastInput', { isAbstract: true })
@@ -19,8 +21,10 @@ export class Podcast extends CoreEntity {
   category: string;
 
   @Field(() => Number)
-  @Column()
+  @Column({ default: 0 })
   @IsNumber()
+  @Min(0)
+  @Max(5)
   rating: number;
 
   @Field(() => [Episode])
@@ -29,4 +33,13 @@ export class Podcast extends CoreEntity {
     eager: true,
   })
   episodes: Episode[];
+
+  @Field(() => [Review])
+  @OneToMany(() => Review, (review) => review.podcast, {
+    cascade: true,
+  })
+  reviews: Review[];
+
+  @ManyToMany(() => User, (user) => user.subscriptions)
+  subscribers: User[];
 }

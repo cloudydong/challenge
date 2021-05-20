@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { PodcastModule } from './podcast/podcast.module';
-import { CommonModule } from './common/common.module';
-import { GraphQLModule } from '@nestjs/graphql';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { JwtModule } from './jwt/jwt.module';
 import { ConfigModule } from '@nestjs/config';
-import { User } from './user/entity/user.entity';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { CommonModule } from './common/common.module';
+import { JwtModule } from './jwt/jwt.module';
+import { Review } from './listener/entity/review.entity';
+import { ListenerModule } from './listener/listener.module';
 import { Episode } from './podcast/entity/episode.entity';
 import { Podcast } from './podcast/entity/podcast.entity';
+import { PodcastModule } from './podcast/podcast.module';
+import { User } from './user/entity/user.entity';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { Podcast } from './podcast/entity/podcast.entity';
       database: 'database.db',
       synchronize: true,
       logging: false,
-      entities: [Podcast, Episode, User],
+      entities: [Podcast, Episode, User, Review],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
@@ -39,6 +41,7 @@ import { Podcast } from './podcast/entity/podcast.entity';
     CommonModule,
     PodcastModule,
     UserModule,
+    ListenerModule,
   ],
   controllers: [],
   providers: [],
