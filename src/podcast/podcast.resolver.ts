@@ -1,4 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Role } from 'src/auth/role.decorator';
 import {
   CreateEpisodeInput,
   CreateEpisodeOutput,
@@ -47,6 +48,7 @@ export class PodcastResolver {
   }
 
   @Mutation(() => CreatePodcastOutput)
+  @Role(['Host'])
   async createPodcast(
     @Args('input') createPodcastInput: CreatePodcastInput,
   ): Promise<CreatePodcastOutput> {
@@ -54,6 +56,7 @@ export class PodcastResolver {
   }
 
   @Mutation(() => UpdatePodcastOutput)
+  @Role(['Host'])
   async updatePodcast(
     @Args('input') updatePodcastInput: UpdatePodcastInput,
   ): Promise<UpdatePodcastOutput> {
@@ -61,6 +64,7 @@ export class PodcastResolver {
   }
 
   @Mutation(() => DeletePodcastOutput)
+  @Role(['Host'])
   async deletePodcast(
     @Args('input') deletePodcastInput: DeletePodcastInput,
   ): Promise<DeletePodcastOutput> {
@@ -82,6 +86,7 @@ export class PodcastResolver {
   }
 
   @Mutation(() => CreateEpisodeOutput)
+  @Role(['Host'])
   async createEpisode(
     @Args('input') createEpisodeInput: CreateEpisodeInput,
   ): Promise<CreateEpisodeOutput> {
@@ -89,6 +94,7 @@ export class PodcastResolver {
   }
 
   @Mutation(() => UpdateEpisodeOutput)
+  @Role(['Host'])
   async updateEpisode(
     @Args('input') updateEpisodeInput: UpdateEpisodeInput,
   ): Promise<UpdateEpisodeOutput> {
@@ -96,6 +102,7 @@ export class PodcastResolver {
   }
 
   @Mutation(() => DeleteEpisodeOutput)
+  @Role(['Host'])
   async deleteEpisode(
     @Args('input') deleteEpisodeInput: DeleteEpisodeInput,
   ): Promise<DeleteEpisodeOutput> {
