@@ -38,6 +38,7 @@ import { UserModule } from './user/user.module';
     }),
     GraphQLModule.forRoot({
       playground: true,
+      introspection: true,
       autoSchemaFile: true,
       context: ({ req }) => {
         const TOKEN_KEY = 'x-jwt';
