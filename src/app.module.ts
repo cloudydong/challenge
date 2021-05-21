@@ -25,6 +25,7 @@ import { UserModule } from './user/user.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
+      ssl: true,
       synchronize: false,
       logging: false,
       entities: [Podcast, Episode, User, Review],
