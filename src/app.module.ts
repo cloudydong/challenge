@@ -37,6 +37,7 @@ import { UserModule } from './user/user.module';
       entities: [Podcast, Episode, User, Review],
     }),
     GraphQLModule.forRoot({
+      playground: true,
       autoSchemaFile: true,
       context: ({ req }) => {
         const TOKEN_KEY = 'x-jwt';
