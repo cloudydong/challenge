@@ -32,7 +32,7 @@ import { UserModule } from './user/user.module';
       ssl: {
         rejectUnauthorized: false,
       },
-      synchronize: false,
+      synchronize: true,
       logging: false,
       entities: [Podcast, Episode, User, Review],
     }),
