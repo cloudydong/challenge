@@ -33,7 +33,6 @@ export class Podcast extends CoreEntity {
   @Field(() => [Episode])
   @OneToMany(() => Episode, (episode) => episode.podcast, {
     cascade: true,
-    eager: true,
   })
   episodes: Episode[];
 

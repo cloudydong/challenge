@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SearchPodcastsOutput } from 'src/listener/dto/search-podcasts.dto';
+import { User } from 'src/user/entity/user.entity';
 import { ILike, Repository } from 'typeorm';
 import {
   CreateEpisodeInput,
@@ -55,7 +56,9 @@ export class PodcastService {
     id: podcastId,
   }: FindPodcastInput): Promise<FindPodcastOutput> {
     try {
-      const podcast = await this.podcastRepository.findOneOrFail(podcastId);
+      const podcast = await this.podcastRepository.findOneOrFail(podcastId, {
+        relations: ['episodes', 'reviews'],
+      });
       return { ok: true, podcast };
     } catch (error) {
       return { ok: false, error: 'can not find podcast by podcastId' };
@@ -63,12 +66,13 @@ export class PodcastService {
   }
 
   async createPodcast(
+    authUser: User,
     createPodcastInput: CreatePodcastInput,
   ): Promise<CreatePodcastOutput> {
     try {
-      await this.podcastRepository.save(
-        this.podcastRepository.create({ ...createPodcastInput }),
-      );
+      const podcast = this.podcastRepository.create({ ...createPodcastInput });
+      podcast.creator = authUser;
+      await this.podcastRepository.save(podcast);
       return { ok: true };
     } catch (error) {
       return {
