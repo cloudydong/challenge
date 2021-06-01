@@ -3,8 +3,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from 'src/jwt/jwt.service';
 import { baseMethodTestTemplate } from '../../test/test.util';
 import { Repository } from 'typeorm';
-import { User } from 'src/user/entity/user.entity';
-import { UserService } from 'src/user/user.service';
+import { User, UserRole } from 'src/user/entity/user.entity';
+import { UserService } from './user.service';
 
 const mockRepository = () => ({
   findOne: jest.fn(),
@@ -52,7 +52,7 @@ describe('UserService', () => {
     const createAccountArgs = {
       email: '',
       password: '',
-      role: 'Host',
+      role: UserRole.Host,
     };
 
     it('should fail if user exists', async () => {
