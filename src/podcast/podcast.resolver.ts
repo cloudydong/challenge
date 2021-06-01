@@ -1,5 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
+import { User } from 'src/user/entity/user.entity';
 import {
   CreateEpisodeInput,
   CreateEpisodeOutput,
@@ -50,9 +52,10 @@ export class PodcastResolver {
   @Mutation(() => CreatePodcastOutput)
   @Role(['Host'])
   async createPodcast(
+    @AuthUser() authUser: User,
     @Args('input') createPodcastInput: CreatePodcastInput,
   ): Promise<CreatePodcastOutput> {
-    return this.podcastService.createPodcast(createPodcastInput);
+    return this.podcastService.createPodcast(authUser, createPodcastInput);
   }
 
   @Mutation(() => UpdatePodcastOutput)

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Episode } from './entity/episode.entity';
 import { Podcast } from './entity/podcast.entity';
 import { PodcastService } from './podcast.service';
+import { UserRole } from 'src/user/entity/user.entity';
 
 const mockPodcastRepository = () => ({
   find: jest.fn(),
@@ -23,6 +24,21 @@ const mockEpisodeRepository = () => ({
 });
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+
+const user = {
+  id: 1,
+  email: 'test',
+  password: 'test',
+  role: UserRole.Host,
+  myPodcast: null,
+  reviews: null,
+  subscriptions: null,
+  markEpisode: null,
+  hashPassword: jest.fn(),
+  checkPassword: jest.fn(),
+  createAt: new Date(),
+  updateAt: new Date(),
+};
 
 describe('PodcastService', () => {
   let podcastService: PodcastService;
@@ -116,7 +132,10 @@ describe('PodcastService', () => {
       podcastRepository.create.mockReturnValue(podcast);
       podcastRepository.save.mockResolvedValue(podcast);
 
-      const result = await podcastService.createPodcast(createPodcastArgs);
+      const result = await podcastService.createPodcast(
+        user,
+        createPodcastArgs,
+      );
       baseMethodTestTemplate(podcastRepository.create, {
         ...createPodcastArgs,
       });
@@ -128,7 +147,10 @@ describe('PodcastService', () => {
 
     it('should fail on exception', async () => {
       podcastRepository.save.mockRejectedValue(new Error());
-      const result = await podcastService.createPodcast(createPodcastArgs);
+      const result = await podcastService.createPodcast(
+        user,
+        createPodcastArgs,
+      );
       expect(result).toEqual({
         ok: false,
         error: 'can not create podcast by createPodcastInput',
@@ -256,6 +278,7 @@ describe('PodcastService', () => {
     const createEpisodeArgs = {
       title: 'title',
       podcastId: 1,
+      category: 'test',
     };
 
     it('can not find podcast', async () => {
