@@ -45,7 +45,9 @@ export class PodcastService {
 
   async findPodcasts(): Promise<FindPodcastsOutput> {
     try {
-      const podcasts = await this.podcastRepository.find();
+      const podcasts = await this.podcastRepository.find({
+        relations: ['episodes', 'reviews'],
+      });
       return { ok: true, podcasts };
     } catch (error) {
       return { ok: false, error: 'can not find all podcasts' };
