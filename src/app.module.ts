@@ -21,7 +21,12 @@ import { UserModule } from './user/user.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       ...(process.env.DATABASE_URL
-        ? { url: process.env.DATABASE_URL }
+        ? {
+            url: process.env.DATABASE_URL,
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          }
         : {
             host: process.env.DB_HOST,
             port: +process.env.DB_PORT,
@@ -29,9 +34,6 @@ import { UserModule } from './user/user.module';
             password: process.env.DB_PASSWORD,
             database: process.env.DB_DATABASE,
           }),
-      ssl: {
-        rejectUnauthorized: false,
-      },
       synchronize: true,
       logging: false,
       entities: [Podcast, Episode, User, Review],
