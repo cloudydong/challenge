@@ -46,12 +46,17 @@ export class User extends CoreEntity {
   @Column({ type: 'simple-enum', enum: UserRole })
   role: UserRole;
 
+  @Field(() => [Podcast])
+  @OneToMany(() => Podcast, (podcast) => podcast.creator)
+  @JoinTable()
+  myPodcast: Podcast[];
+
   @Field(() => [Review])
   @OneToMany(() => Review, (review) => review.author)
   reviews: Review[];
 
   @Field(() => [Podcast])
-  @ManyToMany(() => Podcast, (podcast) => podcast.subscribers)
+  @ManyToMany(() => Podcast)
   @JoinTable()
   subscriptions: Podcast[];
 

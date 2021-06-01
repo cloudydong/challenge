@@ -3,7 +3,7 @@ import { IsNumber, IsString, Max, Min } from 'class-validator';
 import { CoreEntity } from 'src/common/entity/core.entity';
 import { Review } from 'src/listener/entity/review.entity';
 import { User } from 'src/user/entity/user.entity';
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Episode } from './episode.entity';
 
 @InputType('PodcastInput', { isAbstract: true })
@@ -27,6 +27,9 @@ export class Podcast extends CoreEntity {
   @Max(5)
   rating: number;
 
+  @ManyToOne(() => User, (user) => user.myPodcast)
+  creator: User;
+
   @Field(() => [Episode])
   @OneToMany(() => Episode, (episode) => episode.podcast, {
     cascade: true,
@@ -39,7 +42,4 @@ export class Podcast extends CoreEntity {
     cascade: true,
   })
   reviews: Review[];
-
-  @ManyToMany(() => User, (user) => user.subscriptions)
-  subscribers: User[];
 }
