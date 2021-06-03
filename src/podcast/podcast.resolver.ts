@@ -22,6 +22,7 @@ import { FindEpisodeInput, FindEpisodeOutput } from './dto/find-episode.dto';
 import { FindEpisodesInput, FindEpisodesOutput } from './dto/find-episodes.dto';
 import { FindPodcastInput, FindPodcastOutput } from './dto/find-podcast.dto';
 import { FindPodcastsOutput } from './dto/find-podcasts.dto';
+import { SeePodcastOutput } from './dto/see-podcast.dto';
 import {
   UpdateEpisodeInput,
   UpdateEpisodeOutput,
@@ -110,5 +111,11 @@ export class PodcastResolver {
     @Args('input') deleteEpisodeInput: DeleteEpisodeInput,
   ): Promise<DeleteEpisodeOutput> {
     return this.podcastService.deleteEpisode(deleteEpisodeInput);
+  }
+
+  @Query(() => SeePodcastOutput)
+  @Role(['Host'])
+  async seePodcast(@AuthUser() authUser: User): Promise<SeePodcastOutput> {
+    return this.podcastService.seePodcast(authUser.id);
   }
 }

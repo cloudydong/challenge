@@ -23,6 +23,7 @@ import { FindEpisodeInput, FindEpisodeOutput } from './dto/find-episode.dto';
 import { FindEpisodesInput, FindEpisodesOutput } from './dto/find-episodes.dto';
 import { FindPodcastInput, FindPodcastOutput } from './dto/find-podcast.dto';
 import { FindPodcastsOutput } from './dto/find-podcasts.dto';
+import { SeePodcastOutput } from './dto/see-podcast.dto';
 import {
   UpdateEpisodeInput,
   UpdateEpisodeOutput,
@@ -41,6 +42,8 @@ export class PodcastService {
     private readonly podcastRepository: Repository<Podcast>,
     @InjectRepository(Episode)
     private readonly episodeRepository: Repository<Episode>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async findPodcasts(): Promise<FindPodcastsOutput> {
@@ -196,6 +199,17 @@ export class PodcastService {
       return { ok: true, podcasts };
     } catch (error) {
       return { ok: false, error: 'can not search podcasts' };
+    }
+  }
+
+  async seePodcast(userId: number): Promise<SeePodcastOutput> {
+    try {
+      const user = await this.userRepository.findOne(userId, {
+        relations: ['myPodcast'],
+      });
+      return { ok: true, podcasts: user.myPodcast };
+    } catch (error) {
+      return { ok: false, error: 'can not see podcasts' };
     }
   }
 }
