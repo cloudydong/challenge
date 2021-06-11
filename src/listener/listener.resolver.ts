@@ -10,6 +10,10 @@ import {
   ReivewPodcastsOutput,
 } from './dto/review-podcast.dto';
 import {
+  searchCategoryInput,
+  searchCategoryOutput,
+} from './dto/search-category';
+import {
   SearchPodcastsInput,
   SearchPodcastsOutput,
 } from './dto/search-podcasts.dto';
@@ -33,6 +37,14 @@ export class ListenerResolver {
     @Args('input') searchPodcastsInput: SearchPodcastsInput,
   ): Promise<SearchPodcastsOutput> {
     return this.podcastService.searchByTitle(searchPodcastsInput.title);
+  }
+
+  @Query(() => searchCategoryOutput)
+  @Role(['Listener'])
+  async searchCategory(
+    @Args('input') searchCategory: searchCategoryInput,
+  ): Promise<searchCategoryOutput> {
+    return this.podcastService.searchCategory(searchCategory.category);
   }
 
   @Mutation(() => ReivewPodcastsOutput)

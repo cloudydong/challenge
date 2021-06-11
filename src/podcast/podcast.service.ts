@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SearchPodcastsOutput } from 'src/listener/dto/search-podcasts.dto';
 import { User } from 'src/user/entity/user.entity';
 import { ILike, Repository } from 'typeorm';
+import { searchCategoryOutput } from '../listener/dto/search-category';
 import {
   CreateEpisodeInput,
   CreateEpisodeOutput,
@@ -210,6 +211,17 @@ export class PodcastService {
       return { ok: true, podcasts: user.myPodcast };
     } catch (error) {
       return { ok: false, error: 'can not see podcasts' };
+    }
+  }
+
+  async searchCategory(query: string): Promise<searchCategoryOutput> {
+    try {
+      const podcasts = await this.podcastRepository.find({
+        where: { category: ILike(`%${query}%`) },
+      });
+      return { ok: true, podcasts };
+    } catch (error) {
+      return { ok: false, error: 'can not search podcasts' };
     }
   }
 }
