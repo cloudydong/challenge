@@ -11,7 +11,7 @@ import { Episode } from '../entity/episode.entity';
 @InputType()
 export class UpdateEpisodeInput extends IntersectionType(
   PickType(Episode, ['id'] as const),
-  PartialType(PickType(Episode, ['title'] as const)),
+  PartialType(PickType(Episode, ['title', 'summary', 'link'] as const)),
 ) {}
 
 @ObjectType()

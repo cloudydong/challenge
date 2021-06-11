@@ -16,7 +16,12 @@ export class Episode extends CoreEntity {
   @Field(() => String)
   @Column()
   @IsString()
-  category: string;
+  summary: string;
+
+  @Field(() => String)
+  @Column()
+  @IsString()
+  link: string;
 
   @ManyToOne(() => Podcast, (podcast) => podcast.episodes, {
     onDelete: 'CASCADE',
