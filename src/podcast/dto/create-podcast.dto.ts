@@ -5,8 +5,10 @@ import { Podcast } from '../entity/podcast.entity';
 @InputType()
 export class CreatePodcastInput extends PickType(Podcast, [
   'title',
+  'summary',
   'category',
-  'rating',
+  'thumbnail',
+  'site',
 ] as const) {}
 
 @ObjectType()
